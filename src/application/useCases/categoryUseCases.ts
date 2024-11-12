@@ -47,6 +47,14 @@ export class CategoryUseCases{
         if (!findCategory) {
             return new ApplicationResponse("Categoria não encontrada",HttpStatusCode.NotFound)
         }
+
+        if(findCategory.parentId){
+            let parentChildren = await this.repositoryCategory.ListChildren(findCategory.parentId)
+
+            if(parentChildren.find(child => child.name == category.name)){
+                return new ApplicationResponse("Categoria já cadastrada com o nome informado.")
+            }
+        }
         findCategory.active = category.active
         findCategory.name = category.name
 
